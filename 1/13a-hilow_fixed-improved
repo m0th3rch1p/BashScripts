@@ -3,7 +3,7 @@
 
 biggest=10                    # max value for random 32bit integer
 guess=0                       # guess made by player
-guesses=0                     # number of guesses made
+guesses=1                     # number of guesses made
 min=0                         # min value for random 32bit integer
 number=$((SRANDOM % (biggest - min + 1) + min))  # generate 'UNIFORM' random number
 
