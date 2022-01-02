@@ -7,20 +7,14 @@ guesses=1                     # number of guesses made
 min=0                         # min value for random 32bit integer
 number=$((SRANDOM % (biggest - min + 1) + min))  # generate 'UNIFORM' random number
 
-# function to initialize new game
-init_new_game() {
-echo -n "Guess a number between $min and $biggest: " ; read -r guess
-}
-
 # function to initialize prompt for game in progress
 init_game() {
-echo -n "Guess a $hint number between $min and $biggest: " ; read -r guess
+echo -n "Guess a $1number between $min and $biggest: " ; read -r guess
 }
 
 # function to check data is of the correct type
 check_datatype() {
-nodigits="$(echo "$guess" | sed 's/[[:digit:]]//g')"  # Create a version of the number that has no digits, for testing.
-if [ -n "$nodigits" ] ; then  # Check for non-digit characters.
+if [[  "${guess}" =~ ^[[:digit:]]*$ ]]; then  # Check for non-digit characters.
     echo "Invalid number format! Only digits, no commas, spaces, etc" >&2
 	type=1
 else
@@ -42,12 +36,12 @@ fi
 data_check() {
 check_datatype
 while [ "$type" == 1 ] ; do
-	init_new_game
+	init_game
 	check_datatype
 done
 check_range
 while [ "$range" == 1 ] ; do
-	init_new_game
+	init_game
 	check_range
 done
 }
@@ -55,9 +49,9 @@ done
 #function to evaluate guess
 eval_guess() {
 if [ "$guess" -lt "$number" ]; then
-	hint="bigger"
+	hint="bigger "
 elif [ "$guess" -gt "$number" ]; then
-	hint="smaller"
+	hint="smaller "
 fi
 guesses=$(( guesses + 1 ))
 }
@@ -67,7 +61,7 @@ init_new_game
 data_check
 while [ "$guess" -ne "$number" ] ; do
 	eval_guess
-	init_game
+	init_game "$hint"
 done
 echo "Right!! Guessed $number in $guesses guesses."
 
