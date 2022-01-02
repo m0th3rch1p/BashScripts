@@ -9,7 +9,7 @@ number=$((SRANDOM % (biggest - min + 1) + min))  # generate 'UNIFORM' random num
 
 # function to initialize prompt for game in progress
 init_game() {
-echo -n "Guess a $1number between $min and $biggest: " ; read -r guess
+read -rp "Guess a $1number between $min and $biggest: " guess
 }
 
 # function to check data is of the correct type
