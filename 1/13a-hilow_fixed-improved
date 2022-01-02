@@ -9,12 +9,12 @@ number=$((SRANDOM % (biggest - min + 1) + min))  # generate 'UNIFORM' random num
 
 # function to initialize new game
 init_new_game() {
-/bin/echo -n "Guess a number between $min and $biggest: " ; read -r guess
+echo -n "Guess a number between $min and $biggest: " ; read -r guess
 }
 
 # function to initialize prompt for game in progress
 init_game() {
-/bin/echo -n "Guess a $hint number between $min and $biggest: " ; read -r guess
+echo -n "Guess a $hint number between $min and $biggest: " ; read -r guess
 }
 
 # function to check data is of the correct type
