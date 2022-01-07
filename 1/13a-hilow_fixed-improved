@@ -5,60 +5,49 @@ biggest=10                    # max value for random 32bit integer
 guess=0                       # guess made by player
 guesses=1                     # number of guesses made
 min=0                         # min value for random 32bit integer
-number=$((SRANDOM % (biggest - min + 1) + min))  # generate 'UNIFORM' random number
+number=$((RANDOM % (biggest - min + 1) + min))  # generate 'UNIFORM' random number
 
 # function to initialize prompt for game in progress
 init_game() {
 read -rp "Guess a $1number between $min and $biggest: " guess
 }
 
+# integer check
+is_integer() { 
+  case "${1#[-+]}" in 
+    (''|*[!0-9]*) return 1 ;;
+  esac
+  return 0
+}
+
 # function to check data is of the correct type
-check_datatype() {
-if [[  "${guess}" =~ ^[[:digit:]]*$ ]]; then  # Check for non-digit characters.
-    echo "Invalid number format! Only digits, no commas, spaces, etc" >&2
-	type=1
-else
-	type=0
-fi
-}
-
-# function to check data is in the right range
-check_range() {
-if [ "$guess" -lt "$min" ] || [ "$guess" -gt "$biggest" ]; then # check the value is in the right range
-	echo "Guess a number in this range! $min : $biggest"
-	range=1
-else
-	range=0
-fi
-}
-
-# function to loop the prompt till user inputs correct data type in the specified range
 data_check() {
-check_datatype
-while [ "$type" == 1 ] ; do
-	init_game
-	check_datatype
+until is_integer "$guess"; do  # Check for non-digit characters.
+    echo "Invalid number format! Only digits, no commas, spaces, etc" >&2
+	return 1
 done
-check_range
-while [ "$range" == 1 ] ; do
-	init_game
-	check_range
+while [ "$guess" -lt "$min" ] || [ "$guess" -gt "$biggest" ]; do # check the value is in the right range
+	echo "Guess a number in this range! $min : $biggest"
+	return 1
 done
+return 0
 }
 
 #function to evaluate guess
 eval_guess() {
-if [ "$guess" -lt "$number" ]; then
-	hint="bigger "
-elif [ "$guess" -gt "$number" ]; then
-	hint="smaller "
-fi
-guesses=$(( guesses + 1 ))
+		if ((guess < number)); then
+				hint="bigger "
+		elif ((guess > number)); then
+				hint="smaller "
+		fi
+		((guesses++))
 }
 
 # Beginning of game
-init_new_game
-data_check
+init_game
+until data_check; do
+	init_game
+done
 while [ "$guess" -ne "$number" ] ; do
 	eval_guess
 	init_game "$hint"
