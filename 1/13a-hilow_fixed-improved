@@ -1,5 +1,5 @@
 #!/bin/bash
-# hilow--A simple number-guessing game
+# hilow--A number-guessing game
 
 biggest=10                    # max value for random 32bit integer
 guess=0                       # guess made by player
